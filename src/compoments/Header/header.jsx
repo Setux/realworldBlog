@@ -8,9 +8,9 @@ const Header = () => (
       Realworld Blog
     </Link>
     <div className={classes.header__log}>
-      <a href="/sign-in" className={classes['header__log--signin']}>
+      <Link to="/sign-in" className={classes['header__log--signin']}>
         Sign in
-      </a>
+      </Link>
       <a href="/sign-up" className={classes['header__log--signup']}>
         Sign up
       </a>

@@ -60,10 +60,10 @@ const Article = (props) => {
 Article.propTypes = {
   title: PropTypes.string.isRequired,
   slug: PropTypes.string.isRequired,
-  tagList: PropTypes.arrayOf().isRequired,
+  tagList: PropTypes.arrayOf(PropTypes.string).isRequired,
   createdAt: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  author: PropTypes.objectOf().isRequired,
+  author: PropTypes.objectOf(PropTypes.any).isRequired,
   favoritesCount: PropTypes.number.isRequired,
   favorited: PropTypes.bool.isRequired
 }

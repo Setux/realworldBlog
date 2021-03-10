@@ -7,6 +7,7 @@ import classes from './app.module.scss';
 import Header from '../Header';
 import FullArticle from '../ArticleList/FullArticle';
 import ArticleList from '../ArticleList';
+import RegisterForm from "../RegisterForm";
 import rootReducer from '../../store/reducer';
 
 const actionSanitizer = (action) =>
@@ -37,6 +38,7 @@ const App = () => (
             return <FullArticle slug={params.slug} />;
           }}
         />
+        <Route path="/sign-up" component={RegisterForm} exact />
       </main>
     </Router>
   </Provider>
