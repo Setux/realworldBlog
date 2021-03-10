@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import RealworldService from '../services/socialAPI';
 
 
+
 const realworldAPI = new RealworldService();
 
 const getData = async (page) => {
