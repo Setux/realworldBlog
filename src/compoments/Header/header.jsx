@@ -11,9 +11,9 @@ const Header = () => (
       <Link to="/sign-in" className={classes['header__log--signin']}>
         Sign in
       </Link>
-      <a href="/sign-up" className={classes['header__log--signup']}>
+      <Link to="/sign-up" className={classes['header__log--signup']}>
         Sign up
-      </a>
+      </Link>
     </div>
   </div>
 );
