@@ -10,7 +10,7 @@ import classes from './full-article.module.scss';
 import * as actions from '../../../store/actions';
 import liked from './liked.svg';
 import unliked from './unliked.svg';
-import defaultAvatar from './default_avatar.jpg';
+import defaultAvatar from './default-avatar.svg';
 
 const FullArticle = ({ slug, selectedArticle, getArticle }) => {
   useEffect(() => {

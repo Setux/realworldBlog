@@ -6,7 +6,7 @@ import PropTypes from "prop-types"
 import classes from './article.module.scss';
 import liked from './liked.svg';
 import unliked from './unliked.svg';
-import defaultAvatar from './default_avatar.jpg';
+import defaultAvatar from './default-avatar.svg';
 
 const Article = (props) => {
   const { title, slug, tagList, createdAt, description, author, favoritesCount, favorited } = props;
