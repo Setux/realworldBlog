@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import classes from './header.module.scss';
 import {logoutUser} from "../../store/actions";
 
+
 // eslint-disable-next-line react/prop-types
 const Header = ({user, isLoggedIn, logout}) => {
     if (!isLoggedIn) {
@@ -23,6 +24,21 @@ const Header = ({user, isLoggedIn, logout}) => {
             </div>
         )
     }
+const Header = () => (
+  <div className={classes.header}>
+    <Link to="/" className={classes.header__link}>
+      Realworld Blog
+    </Link>
+    <div className={classes.header__log}>
+      <Link to="/sign-in" className={classes['header__log--signin']}>
+        Sign in
+      </Link>
+      <Link to="/sign-up" className={classes['header__log--signup']}>
+        Sign up
+      </Link>
+    </div>
+  </div>
+);
 
     const handleClick = (event) => {
         event.preventDefault()
