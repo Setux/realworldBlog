@@ -12,7 +12,8 @@ import liked from './liked.svg';
 import unliked from './unliked.svg';
 import defaultAvatar from './default-avatar.svg';
 
-const FullArticle = ({ slug, selectedArticle, getArticle }) => {
+// eslint-disable-next-line no-unused-vars
+const FullArticle = ({ slug, user, selectedArticle, getArticle }) => {
   useEffect(() => {
     getArticle(slug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,7 +82,12 @@ const FullArticle = ({ slug, selectedArticle, getArticle }) => {
 FullArticle.propTypes = {
   slug: PropTypes.string.isRequired,
   selectedArticle: PropTypes.objectOf().isRequired,
-  getArticle: PropTypes.func.isRequired
+  getArticle: PropTypes.func.isRequired,
+  user: PropTypes.string
+}
+
+FullArticle.defaultProps = {
+  user: null
 }
 
 const mapStateToProps = (state) => state.articles;

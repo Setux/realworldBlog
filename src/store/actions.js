@@ -33,6 +33,9 @@ const setArticle = (data) => ({
   type: 'SET_ARTICLE',
   payload: data,
 });
+const posted = () => ({
+  type: "POSTED"
+})
 
 const onLoad = () => ({
   type: 'ON_LOAD',
@@ -101,4 +104,8 @@ export const updateData = (userData) => async (dispatch) => {
   const user = { username, email, image }
   dispatch(loginUser(user))
 }
-
+export const postData = (articleData) => async (dispatch) => {
+  const data = await realworldAPI.postArticle(articleData)
+  dispatch(setArticle(data))
+  dispatch(posted())
+}

@@ -68,4 +68,19 @@ export default class RealworldService {
     const returnedData = await returnedRes.json()
     return returnedData.user
   }
+
+  async postArticle(article) {
+    const token = localStorage.getItem("data")
+    const returnedRes = await fetch('https://conduit.productionready.io/api/articles', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Authorization': `Token ${token}`
+      },
+      body: JSON.stringify({article})
+    })
+    const returnedData = await returnedRes.json()
+    return returnedData.article
+  }
 }

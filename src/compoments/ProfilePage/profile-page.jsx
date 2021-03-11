@@ -71,12 +71,11 @@ const ProfilePage = ({user, updateData}) => {
                            placeholder="Avatar image" ref={register(
                         {
                             required: true,
-                            // eslint-disable-next-line no-useless-escape
-                            pattern: /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/,
+                                pattern: /^https?:\/\/.*\.(?:jpe?g|gif|png)$/gi,
                         })}
                     />
                     {errors.image?.type === "pattern" &&
-                    <span className={classes.profile__error}>This field must be URL.</span>}
+                    <span className={classes.profile__error}>This field must be correct URL.</span>}
                     {errors.image?.type === "required" &&
                     <span className={classes.profile__error}>This field is required.</span>}
                 </label>

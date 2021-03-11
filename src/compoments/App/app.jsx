@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import {BrowserRouter as Router, Redirect, Route} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import classes from './app.module.scss';
@@ -10,6 +10,7 @@ import ArticleList from '../ArticleList';
 import RegisterForm from "../RegisterForm";
 import LoginForm from "../LoginForm";
 import ProfilePage from "../ProfilePage";
+import CreateArticle from "../CreateArticle";
 import rootReducer from '../../store/reducer';
 import { getUser } from "../../store/actions";
 
@@ -45,13 +46,23 @@ export default class App extends React.Component {
                         <Route
                             path="/articles/:slug"
                             render={({ match }) => {
+                                const data = store.getState()
+                                const { user } = data
                                 const { params } = match;
-                                return <FullArticle slug={params.slug} />;
+                                return <FullArticle slug={params.slug} user={user.username} />;
                             }}
                         />
                         <Route path="/sign-up" component={RegisterForm} exact />
                         <Route path="/sign-in" component={LoginForm} exact/>
                         <Route path="/profile" component={ProfilePage} exact/>
+                        <Route path="/new-article" render={() => {
+                            const data = store.getState()
+                            const { user } = data
+                            if (user.isLoggedIn) {
+                                return <CreateArticle/>
+                            }
+                            return <Redirect to="/articles"/>
+                        }} exact/>
                     </main>
                 </Router>
             </Provider>

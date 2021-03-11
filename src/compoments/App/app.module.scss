@@ -1,3 +1,5 @@
+::-webkit-scrollbar { width: 0;}
+
 @font-face {
   font-family: 'Inter';
   src: local('Inter Regular'), local('Inter-Regular'),
@@ -11,6 +13,7 @@
 body {
   background-color: #EBEEF3;
   width: 100%;
+  height: max-content;
   margin: 0;
   font-family: Inter, serif;
   font-size: 18px;
