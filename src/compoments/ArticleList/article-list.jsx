@@ -44,10 +44,15 @@ const ArticleList = ({ data, totalArticles, currentPage, isLoading, getArticles 
 
 ArticleList.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
-  totalArticles: PropTypes.number.isRequired,
-  currentPage: PropTypes.number.isRequired,
+  totalArticles: PropTypes.number,
+  currentPage: PropTypes.number,
   isLoading: PropTypes.bool.isRequired,
   getArticles: PropTypes.func.isRequired
+}
+
+ArticleList.defaultProps = {
+  totalArticles: 500,
+  currentPage: 1
 }
 
 const mapStateToProps = (state) => state.articles;

@@ -38,6 +38,21 @@ const onLoad = () => ({
   type: 'ON_LOAD',
 });
 
+const loginUser = (user) => ({
+  type: "LOGIN_USER",
+  payload: user
+})
+const loginError = () => ({
+  type: "LOGIN_ERROR"
+})
+export const closeError = () => ({
+  type: "CLOSE_ERROR"
+})
+
+export const logoutUser = () => ({
+  type: "LOGOUT_USER"
+})
+
 export const getArticles = (page) => async (dispatch) => {
   dispatch(onLoad());
   const data = await getData(page);
@@ -52,3 +67,31 @@ export const getArticle = (slug) => async (dispatch) => {
   dispatch(setArticle(article));
   dispatch(onLoad());
 };
+
+export const registerUser = (userData) => async (dispatch) => {
+  const data = await realworldAPI.register(userData)
+  const { username, email, image, token } = data
+  localStorage.setItem("data", token)
+  const user = { username, email, image }
+  dispatch(loginUser(user))
+}
+
+export const loginTo = (userData) => async (dispatch) => {
+  const data = await realworldAPI.login(userData)
+  if (data === undefined) {
+    dispatch(loginError())
+  } else {
+    const {username, email, image, token} = data
+    localStorage.setItem("data", token)
+    const user = {username, email, image}
+    dispatch(loginUser(user))
+  }
+}
+
+export const getUser = () => async (dispatch) => {
+  const data = await realworldAPI.getUserData()
+  const { username, email, image } = data
+  const user = { username, email, image }
+  dispatch(loginUser(user))
+}
+
