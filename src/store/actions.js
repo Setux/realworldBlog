@@ -95,3 +95,10 @@ export const getUser = () => async (dispatch) => {
   dispatch(loginUser(user))
 }
 
+export const updateData = (userData) => async (dispatch) => {
+  const data = await realworldAPI.updateUser(userData)
+  const { username, email, image } = data
+  const user = { username, email, image }
+  dispatch(loginUser(user))
+}
+

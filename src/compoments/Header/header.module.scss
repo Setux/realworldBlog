@@ -58,4 +58,67 @@
       }
     }
   }
+  &__logged {
+    width: max-content;
+    display: flex;
+    gap: 27px;
+    align-items: center;
+
+    &--article {
+      color: #52C41A;
+      display: block;
+      width: 113px;
+      text-align: center;
+      padding: 6px 0;
+      border: 1px solid #52C41A;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.3s ease;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0;
+
+
+      &:hover {
+        border: 1px solid #1890FF;
+        transition: 0.3s ease;
+        color: #1890FF;
+      }
+    }
+
+    &--avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+    }
+
+    &--profile {
+      color: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    &--logout {
+      color: rgba(0, 0, 0, 0.85);
+      display: block;
+      width: 97px;
+      text-align: center;
+      padding: 6px 0;
+      border: 1px solid rgba(0, 0, 0, 0.85);
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.3s ease;
+
+      &:hover {
+        color: #F5222D;
+        border: 1px solid #F5222D;
+        transition: 0.3s ease;
+      }
+    }
+  }
 }

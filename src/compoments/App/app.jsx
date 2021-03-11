@@ -9,6 +9,7 @@ import FullArticle from '../ArticleList/FullArticle';
 import ArticleList from '../ArticleList';
 import RegisterForm from "../RegisterForm";
 import LoginForm from "../LoginForm";
+import ProfilePage from "../ProfilePage";
 import rootReducer from '../../store/reducer';
 import { getUser } from "../../store/actions";
 
@@ -50,6 +51,7 @@ export default class App extends React.Component {
                         />
                         <Route path="/sign-up" component={RegisterForm} exact />
                         <Route path="/sign-in" component={LoginForm} exact/>
+                        <Route path="/profile" component={ProfilePage} exact/>
                     </main>
                 </Router>
             </Provider>

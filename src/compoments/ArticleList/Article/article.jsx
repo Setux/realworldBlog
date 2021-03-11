@@ -8,6 +8,13 @@ import liked from './liked.svg';
 import unliked from './unliked.svg';
 import defaultAvatar from './default-avatar.svg';
 
+const setAvatarImage = (image) => {
+  if (image) {
+    return image
+  }
+  return defaultAvatar
+}
+
 const Article = (props) => {
   const { title, slug, tagList, createdAt, description, author, favoritesCount, favorited } = props;
   const createdTime = format(new Date(createdAt), 'MMMM d, yyyy');
@@ -23,12 +30,7 @@ const Article = (props) => {
     likeImage = <img className={classes.like} src={liked} alt="Unlike this post" />;
   }
   const { username, image } = author;
-  let avatarImage = null;
-  if (image) {
-    avatarImage = image;
-  } else {
-    avatarImage = defaultAvatar;
-  }
+  const avatarImage = setAvatarImage(image)
   return (
     <article className={classes.article__container}>
       <header className={classes.article__header}>
