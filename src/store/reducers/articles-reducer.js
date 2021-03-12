@@ -1,4 +1,4 @@
-import { ON_LOAD, SET_ARTICLE, SET_DATA, SET_PAGE, POSTED } from "./constants";
+import { ON_LOAD, SET_ARTICLE, SET_DATA, SET_PAGE, POSTED, DELETED } from "./constants";
 
 const initialState = {
     data: [],
@@ -7,6 +7,7 @@ const initialState = {
     currentPage: null,
     isLoading: false,
     isPosted: false,
+    isDeleted: false
 };
 
 export default function  articlesReducer (state = initialState, { type, payload }) {
@@ -18,6 +19,8 @@ export default function  articlesReducer (state = initialState, { type, payload 
                 data: payload.articles,
                 selectedArticle: null,
                 totalArticles: payload.articlesCount,
+                isDeleted: false,
+                isPosted: false
             };
         case SET_PAGE:
             return {
@@ -29,6 +32,7 @@ export default function  articlesReducer (state = initialState, { type, payload 
                 ...state,
                 data: [],
                 selectedArticle: payload,
+                isPosted: false
             };
         case ON_LOAD:
             return {
@@ -40,6 +44,11 @@ export default function  articlesReducer (state = initialState, { type, payload 
             return {
                 ...state,
                 isPosted: true
+            }
+        case DELETED:
+            return {
+                ...state,
+                isDeleted: true
             }
         default:
             return state;

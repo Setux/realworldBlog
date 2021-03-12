@@ -36,6 +36,9 @@ const setArticle = (data) => ({
 const posted = () => ({
   type: "POSTED"
 })
+const onDelete = () => ({
+  type: "DELETED"
+})
 
 const onLoad = () => ({
   type: 'ON_LOAD',
@@ -63,7 +66,6 @@ export const getArticles = (page) => async (dispatch) => {
   dispatch(setArticles(data));
   dispatch(onLoad());
 };
-
 export const getArticle = (slug) => async (dispatch) => {
   dispatch(onLoad());
   const article = await getPage(slug);
@@ -78,7 +80,6 @@ export const registerUser = (userData) => async (dispatch) => {
   const user = { username, email, image }
   dispatch(loginUser(user))
 }
-
 export const loginTo = (userData) => async (dispatch) => {
   const data = await realworldAPI.login(userData)
   if (data === undefined) {
@@ -90,7 +91,6 @@ export const loginTo = (userData) => async (dispatch) => {
     dispatch(loginUser(user))
   }
 }
-
 export const getUser = () => async (dispatch) => {
   const data = await realworldAPI.getUserData()
   const { username, email, image } = data
@@ -108,4 +108,22 @@ export const postData = (articleData) => async (dispatch) => {
   const data = await realworldAPI.postArticle(articleData)
   dispatch(setArticle(data))
   dispatch(posted())
+}
+export const editArticle = (article, slug) => async (dispatch) => {
+  const data = await realworldAPI.editArticle(article, slug)
+  dispatch(setArticle(data))
+  dispatch(posted())
+}
+export const deleteArticle = (slug) => async (dispatch) => {
+  await realworldAPI.deleteArticle(slug)
+  dispatch(onDelete())
+}
+
+export const like = (slug) => async (dispatch) => {
+  const data = await realworldAPI.likePost(slug)
+  dispatch(setArticle(data))
+}
+export const unlike = (slug) => async (dispatch) => {
+  const data = await realworldAPI.unlikePost(slug)
+  dispatch(setArticle(data))
 }

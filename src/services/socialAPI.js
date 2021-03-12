@@ -1,15 +1,41 @@
 export default class RealworldService {
   async getArticles(page) {
+    const token = localStorage.getItem("data")
     const offset = (page - 1) * 5;
-    const response = await fetch(`https://conduit.productionready.io/api/articles?limit=5&offset=${offset}`);
+    let response = null
+    if (token === null) {
+      response = await fetch(`https://conduit.productionready.io/api/articles?limit=5&offset=${offset}`);
+    } else {
+      response = await fetch(`https://conduit.productionready.io/api/articles?limit=5&offset=${offset}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'Authorization': `Token ${token}`
+        },
+      });
+    }
     const data = await response.json()
     return data
   }
 
   async getArticle(slug) {
-    const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}`);
-    const data = await response.json();
-    return data.article;
+    const token = localStorage.getItem("data")
+    let response = null
+    if (token === null) {
+      response = await fetch(`https://conduit.productionready.io/api/articles/${slug}`);
+    } else {
+      response = await fetch(`https://conduit.productionready.io/api/articles/${slug}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'Authorization': `Token ${token}`
+        },
+      });
+    }
+    const data = await response.json()
+    return data.article
   }
 
   async register(userData) {
@@ -79,6 +105,61 @@ export default class RealworldService {
         'Authorization': `Token ${token}`
       },
       body: JSON.stringify({article})
+    })
+    const returnedData = await returnedRes.json()
+    return returnedData.article
+  }
+
+  async editArticle(article, slug) {
+    const token = localStorage.getItem("data")
+    const returnedRes = await fetch(`https://conduit.productionready.io/api/articles/${slug}`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Authorization': `Token ${token}`
+      },
+      body: JSON.stringify({article})
+    })
+    const returnedData = await returnedRes.json()
+    return returnedData.article
+  }
+
+  async deleteArticle(slug) {
+    const token = localStorage.getItem("data")
+    await fetch(`https://conduit.productionready.io/api/articles/${slug}`, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Authorization': `Token ${token}`
+      },
+    })
+  }
+
+  async likePost(slug) {
+    const token = localStorage.getItem("data")
+    const returnedRes = await fetch(`https://conduit.productionready.io/api/articles/${slug}/favorite`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Authorization': `Token ${token}`
+      },
+    })
+    const returnedData = await returnedRes.json()
+    return returnedData.article
+  }
+
+  async unlikePost(slug) {
+    const token = localStorage.getItem("data")
+    const returnedRes = await fetch(`https://conduit.productionready.io/api/articles/${slug}/favorite`, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Authorization': `Token ${token}`
+      },
     })
     const returnedData = await returnedRes.json()
     return returnedData.article

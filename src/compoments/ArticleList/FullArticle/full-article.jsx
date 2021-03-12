@@ -1,23 +1,58 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Spin } from 'antd';
+import { Spin, Modal, notification } from 'antd';
 import { MessageFilled } from '@ant-design/icons';
 import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import { nanoid } from 'nanoid';
 import PropTypes from "prop-types"
+import {Link, Redirect} from "react-router-dom";
+import ExclamationCircleOutlined from "@ant-design/icons/lib/icons/ExclamationCircleOutlined";
 import classes from './full-article.module.scss';
 import * as actions from '../../../store/actions';
 import liked from './liked.svg';
 import unliked from './unliked.svg';
 import defaultAvatar from './default-avatar.svg';
 
-// eslint-disable-next-line no-unused-vars
-const FullArticle = ({ slug, user, selectedArticle, getArticle }) => {
+const { confirm } = Modal
+
+const setAvatarImage = (image) => {
+  if (image) {
+    return image
+  }
+  return defaultAvatar
+}
+
+// eslint-disable-next-line react/prop-types
+const FullArticle = ({ slug, user, isDeleted, selectedArticle, getArticle, deleteArticle, like, unlike }) => {
   useEffect(() => {
     getArticle(slug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  function showDeleteConfirm() {
+    confirm({
+      title: 'Are you sure to delete this article?',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        deleteArticle(slug);
+        notification.success({
+          message: "Your article has been deleted!",
+          placement: "bottomRight"
+        })
+      },
+      onCancel() {
+        return null;
+      },
+    });
+  }
+
+  if (isDeleted) {
+    return <Redirect to="/"/>
+  }
+
   if (selectedArticle !== null) {
     const { body, title, favorited, favoritesCount, createdAt, tagList, author, description } = selectedArticle;
     const createdTime = format(new Date(createdAt), 'MMMM d, yyyy');
@@ -31,16 +66,31 @@ const FullArticle = ({ slug, user, selectedArticle, getArticle }) => {
 
     let likeImage = null;
     if (!favorited) {
-      likeImage = <img className={classes.like} src={unliked} alt="Like this post" />;
+      likeImage = (
+          <button className={classes.article__button} onClick={() => like(slug)} type="button" disabled={!user}>
+            <img className={classes.like} src={unliked} alt="Like this post" />
+          </button>
+      )
     } else {
-      likeImage = <img className={classes.like} src={liked} alt="Unlike this post" />;
+      likeImage = (
+          <button className={classes.article__button} onClick={() => unlike(slug)} type="button" disabled={!user}>
+            <img className={classes.like} src={liked} alt="Unlike this post" />
+          </button>
+      )
     }
 
-    let avatarImage = null;
-    if (image) {
-      avatarImage = image;
+    const avatarImage = setAvatarImage(image)
+
+    let articleSettings = null
+    if(username === user) {
+      articleSettings = (
+          <section className={classes.article__settings}>
+            <button type="button" onClick={() => showDeleteConfirm() } className={classes.article__delete}> Delete </button>
+            <Link className={classes.article__edit} to={location => `${location.pathname}/edit`}>Edit</Link>
+          </section>
+      )
     } else {
-      avatarImage = defaultAvatar;
+      articleSettings = null
     }
 
     return (
@@ -64,7 +114,10 @@ const FullArticle = ({ slug, user, selectedArticle, getArticle }) => {
             <img className={classes.user__avatar} alt={`${username}'s avatar`} src={avatarImage} />
           </div>
         </header>
-        <div className={classes.article__description}>{description}</div>
+        <section className={classes.article__setting}>
+          <div className={classes.article__description}>{description}</div>
+          {articleSettings}
+        </section>
         <main className={classes.article__body}>
           <ReactMarkdown>{body}</ReactMarkdown>
         </main>
@@ -81,13 +134,16 @@ const FullArticle = ({ slug, user, selectedArticle, getArticle }) => {
 
 FullArticle.propTypes = {
   slug: PropTypes.string.isRequired,
-  selectedArticle: PropTypes.objectOf().isRequired,
+  selectedArticle: PropTypes.objectOf(PropTypes.any),
   getArticle: PropTypes.func.isRequired,
-  user: PropTypes.string
+  user: PropTypes.string,
+  like: PropTypes.func.isRequired,
+  unlike: PropTypes.func.isRequired
 }
 
 FullArticle.defaultProps = {
-  user: null
+  user: null,
+  selectedArticle: null
 }
 
 const mapStateToProps = (state) => state.articles;

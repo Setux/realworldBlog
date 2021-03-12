@@ -31,8 +31,8 @@ const Header = ({user, isLoggedIn, logout}) => {
             </div>
         )
     }
-    const handleClick = (event) => {
-        event.preventDefault()
+    // eslint-disable-next-line no-unused-vars
+    const handleClick = () => {
         localStorage.removeItem("data")
         logout()
     }
@@ -53,7 +53,7 @@ const Header = ({user, isLoggedIn, logout}) => {
                     {username}
                     <img className={classes['header__logged--avatar']} src={avatarImage} alt="Your avatar"/>
                 </Link>
-                <Link to="/" type="button" onClick={handleClick} className={classes['header__logged--logout']}>
+                <Link to="/articles" onClick={handleClick} className={classes['header__logged--logout']}>
                     Log out
                 </Link>
             </div>

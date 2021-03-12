@@ -11,6 +11,7 @@ import RegisterForm from "../RegisterForm";
 import LoginForm from "../LoginForm";
 import ProfilePage from "../ProfilePage";
 import CreateArticle from "../CreateArticle";
+import EditArticle from "../EditArticle";
 import rootReducer from '../../store/reducer';
 import { getUser } from "../../store/actions";
 
@@ -49,8 +50,21 @@ export default class App extends React.Component {
                                 const data = store.getState()
                                 const { user } = data
                                 const { params } = match;
-                                return <FullArticle slug={params.slug} user={user.username} />;
+                                if (user.user !== null) {
+                                    return <FullArticle slug={params.slug} user={user.user.username}
+                                    />;
+                                }
+                                return <FullArticle slug={params.slug}/>
                             }}
+                            exact
+                         />
+                        <Route
+                            path="/articles/:slug/edit"
+                            render={({ match }) => {
+                                const { params } = match;
+                                return <EditArticle slug={params.slug}/>
+                            }}
+                            exact
                         />
                         <Route path="/sign-up" component={RegisterForm} exact />
                         <Route path="/sign-in" component={LoginForm} exact/>
