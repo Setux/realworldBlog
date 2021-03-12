@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Pagination, Spin } from 'antd';
 import { MessageFilled } from '@ant-design/icons';
-import PropTypes from "prop-types"
+import PropTypes from 'prop-types';
 import Article from './Article';
 import classes from './article-list.module.scss';
 import * as actions from '../../store/actions';
@@ -47,13 +47,13 @@ ArticleList.propTypes = {
   totalArticles: PropTypes.number,
   currentPage: PropTypes.number,
   isLoading: PropTypes.bool.isRequired,
-  getArticles: PropTypes.func.isRequired
-}
+  getArticles: PropTypes.func.isRequired,
+};
 
 ArticleList.defaultProps = {
   totalArticles: 500,
-  currentPage: 1
-}
+  currentPage: 1,
+};
 
 const mapStateToProps = (state) => state.articles;
 

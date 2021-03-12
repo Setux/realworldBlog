@@ -2,7 +2,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { nanoid } from 'nanoid';
 import { Link } from 'react-router-dom';
-import PropTypes from "prop-types"
+import PropTypes from 'prop-types';
 import classes from './article.module.scss';
 import liked from './liked.svg';
 import unliked from './unliked.svg';
@@ -10,10 +10,10 @@ import defaultAvatar from './default-avatar.svg';
 
 const setAvatarImage = (image) => {
   if (image) {
-    return image
+    return image;
   }
-  return defaultAvatar
-}
+  return defaultAvatar;
+};
 
 const Article = (props) => {
   const { title, slug, tagList, createdAt, description, author, favoritesCount, favorited } = props;
@@ -30,7 +30,7 @@ const Article = (props) => {
     likeImage = <img className={classes.like} src={liked} alt="Unlike this post" />;
   }
   const { username, image } = author;
-  const avatarImage = setAvatarImage(image)
+  const avatarImage = setAvatarImage(image);
   return (
     <article className={classes.article__container}>
       <header className={classes.article__header}>
@@ -67,7 +67,7 @@ Article.propTypes = {
   description: PropTypes.string.isRequired,
   author: PropTypes.objectOf(PropTypes.any).isRequired,
   favoritesCount: PropTypes.number.isRequired,
-  favorited: PropTypes.bool.isRequired
-}
+  favorited: PropTypes.bool.isRequired,
+};
 
 export default Article;

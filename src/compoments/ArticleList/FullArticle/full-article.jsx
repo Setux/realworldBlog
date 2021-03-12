@@ -5,25 +5,24 @@ import { MessageFilled } from '@ant-design/icons';
 import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import { nanoid } from 'nanoid';
-import PropTypes from "prop-types"
-import {Link, Redirect} from "react-router-dom";
-import ExclamationCircleOutlined from "@ant-design/icons/lib/icons/ExclamationCircleOutlined";
+import PropTypes from 'prop-types';
+import { Link, Redirect } from 'react-router-dom';
+import ExclamationCircleOutlined from '@ant-design/icons/lib/icons/ExclamationCircleOutlined';
 import classes from './full-article.module.scss';
 import * as actions from '../../../store/actions';
 import liked from './liked.svg';
 import unliked from './unliked.svg';
 import defaultAvatar from './default-avatar.svg';
 
-const { confirm } = Modal
+const { confirm } = Modal;
 
 const setAvatarImage = (image) => {
   if (image) {
-    return image
+    return image;
   }
-  return defaultAvatar
-}
+  return defaultAvatar;
+};
 
-// eslint-disable-next-line react/prop-types
 const FullArticle = ({ slug, user, isDeleted, selectedArticle, getArticle, deleteArticle, like, unlike }) => {
   useEffect(() => {
     getArticle(slug);
@@ -39,9 +38,9 @@ const FullArticle = ({ slug, user, isDeleted, selectedArticle, getArticle, delet
       onOk() {
         deleteArticle(slug);
         notification.success({
-          message: "Your article has been deleted!",
-          placement: "bottomRight"
-        })
+          message: 'Your article has been deleted!',
+          placement: 'bottomRight',
+        });
       },
       onCancel() {
         return null;
@@ -50,7 +49,7 @@ const FullArticle = ({ slug, user, isDeleted, selectedArticle, getArticle, delet
   }
 
   if (isDeleted) {
-    return <Redirect to="/"/>
+    return <Redirect to="/" />;
   }
 
   if (selectedArticle !== null) {
@@ -67,30 +66,35 @@ const FullArticle = ({ slug, user, isDeleted, selectedArticle, getArticle, delet
     let likeImage = null;
     if (!favorited) {
       likeImage = (
-          <button className={classes.article__button} onClick={() => like(slug)} type="button" disabled={!user}>
-            <img className={classes.like} src={unliked} alt="Like this post" />
-          </button>
-      )
+        <button className={classes.article__button} onClick={() => like(slug)} type="button" disabled={!user}>
+          <img className={classes.like} src={unliked} alt="Like this post" />
+        </button>
+      );
     } else {
       likeImage = (
-          <button className={classes.article__button} onClick={() => unlike(slug)} type="button" disabled={!user}>
-            <img className={classes.like} src={liked} alt="Unlike this post" />
-          </button>
-      )
+        <button className={classes.article__button} onClick={() => unlike(slug)} type="button" disabled={!user}>
+          <img className={classes.like} src={liked} alt="Unlike this post" />
+        </button>
+      );
     }
 
-    const avatarImage = setAvatarImage(image)
+    const avatarImage = setAvatarImage(image);
 
-    let articleSettings = null
-    if(username === user) {
+    let articleSettings = null;
+    if (username === user) {
       articleSettings = (
-          <section className={classes.article__settings}>
-            <button type="button" onClick={() => showDeleteConfirm() } className={classes.article__delete}> Delete </button>
-            <Link className={classes.article__edit} to={location => `${location.pathname}/edit`}>Edit</Link>
-          </section>
-      )
+        <section className={classes.article__settings}>
+          <button type="button" onClick={() => showDeleteConfirm()} className={classes.article__delete}>
+            {' '}
+            Delete{' '}
+          </button>
+          <Link className={classes.article__edit} to={(location) => `${location.pathname}/edit`}>
+            Edit
+          </Link>
+        </section>
+      );
     } else {
-      articleSettings = null
+      articleSettings = null;
     }
 
     return (
@@ -126,10 +130,10 @@ const FullArticle = ({ slug, user, isDeleted, selectedArticle, getArticle, delet
   }
   const spinIcon = <MessageFilled spin style={{ fontSize: 36 }} />;
   return (
-      <div className={classes.loading}>
-        <Spin indicator={spinIcon} size="large" />
-      </div>
-  )
+    <div className={classes.loading}>
+      <Spin indicator={spinIcon} size="large" />
+    </div>
+  );
 };
 
 FullArticle.propTypes = {
@@ -138,13 +142,15 @@ FullArticle.propTypes = {
   getArticle: PropTypes.func.isRequired,
   user: PropTypes.string,
   like: PropTypes.func.isRequired,
-  unlike: PropTypes.func.isRequired
-}
+  unlike: PropTypes.func.isRequired,
+  isDeleted: PropTypes.bool.isRequired,
+  deleteArticle: PropTypes.func.isRequired,
+};
 
 FullArticle.defaultProps = {
   user: null,
-  selectedArticle: null
-}
+  selectedArticle: null,
+};
 
 const mapStateToProps = (state) => state.articles;
 
