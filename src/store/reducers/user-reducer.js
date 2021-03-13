@@ -2,6 +2,7 @@ import { LOGIN_USER, LOGOUT_USER, LOGIN_ERROR, REG_ERROR, CLOSE_ERROR, UPDATE_ER
 
 const initialState = {
   user: null,
+  errorsList: null,
   isLoggedIn: false,
   loginError: false,
   updateError: false,
@@ -15,6 +16,7 @@ export default function userReducer(state = initialState, { type, payload }) {
         user: payload,
         isLoggedIn: true,
         loginError: false,
+        errorsList: null
       };
     case LOGOUT_USER:
       return {
@@ -30,21 +32,21 @@ export default function userReducer(state = initialState, { type, payload }) {
     case UPDATE_ERROR:
       return {
         ...state,
-        updateError: true
+        updateError: true,
+        errorsList: payload
       }
     case CLOSE_ERROR:
       return {
         ...state,
         loginError: false,
         updateError: false,
-        regError: false,
-        user: null
+        regError: false
       };
     case REG_ERROR:
       return {
         ...state,
         regError: true,
-        user: payload
+        errorsList: payload
       }
     default:
       return state;

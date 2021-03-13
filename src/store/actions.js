@@ -53,8 +53,9 @@ const regError = (data) => ({
 const loginError = () => ({
   type: 'LOGIN_ERROR',
 });
-const updateError = () => ({
-  type: "UPDATE_ERROR"
+const updateError = (data) => ({
+  type: "UPDATE_ERROR",
+  payload: data
 })
 export const closeError = () => ({
   type: 'CLOSE_ERROR',
@@ -81,17 +82,16 @@ export const getArticle = (slug) => async (dispatch) => {
 export const registerUser = (userData) => async (dispatch) => {
   dispatch(closeError())
   const data = await realworldAPI.register(userData);
-  if (data !== null && data.errors !== null) {
+  if (data !== null && data.errors !== undefined) {
     dispatch(regError(data))
     return false
-    // eslint-disable-next-line no-else-return
-  } else {
-    const { username, email, image, token } = data;
-    localStorage.setItem('data', token);
-    const user = { username, email, image };
-    dispatch(loginUser(user));
-    return true
   }
+  const { username, email, image, token } = data;
+  localStorage.setItem('data', token);
+  const user = { username, email, image };
+  dispatch(loginUser(user));
+  return true
+
 };
 export const loginTo = (userData) => async (dispatch) => {
   const data = await realworldAPI.login(userData);
@@ -112,9 +112,10 @@ export const getUser = () => async (dispatch) => {
 };
 
 export const updateData = (userData) => async (dispatch) => {
+  dispatch(closeError())
   const data = await realworldAPI.updateUser(userData);
-  if (data === undefined) {
-    dispatch(updateError())
+  if (data !== null && data.errors !== undefined) {
+    dispatch(updateError(data))
     return false
   }
     const { username, email, image } = data;

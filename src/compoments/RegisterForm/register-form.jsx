@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 import classes from './register-form.module.scss';
 
-const RegisterForm = ({user, isLoggedIn, registerUser, closeError }) => {
+const RegisterForm = ({errorsList, isLoggedIn, registerUser, closeError }) => {
   const { register, handleSubmit, errors, getValues } = useForm();
     const onSubmit = (data) => registerUser(data);
   const regForm = (
@@ -116,9 +116,11 @@ const RegisterForm = ({user, isLoggedIn, registerUser, closeError }) => {
           </p>
           </>
   )
-  if (user !== null && user.errors !== null) {
+  if (errorsList !== null) {
       // eslint-disable-next-line no-shadow
-      const { errors } = user
+      const { errors } = errorsList
+
+      // eslint-disable-next-line no-shadow
       const setAlert = (errorsList, closeErrorHandle) => {
           if (errors.email !== undefined && errors.username !== undefined) {
               return <Alert
@@ -176,11 +178,11 @@ const RegisterForm = ({user, isLoggedIn, registerUser, closeError }) => {
 RegisterForm.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   registerUser: PropTypes.func.isRequired,
-    user: PropTypes.objectOf(PropTypes.any),
+    errorsList: PropTypes.objectOf(PropTypes.any),
     closeError: PropTypes.func.isRequired
 };
 RegisterForm.defaultProps = {
-    user: null
+    errorsList: null
 }
 
 const mapStateToProps = (state) => state.user;

@@ -95,6 +95,10 @@ export default class RealworldService {
       },
       body: JSON.stringify({ user }),
     });
+    if (returnedRes.status === 422) {
+      const errorMessage = await returnedRes.json()
+      return errorMessage
+    }
     const returnedData = await returnedRes.json();
     return returnedData.user;
   }

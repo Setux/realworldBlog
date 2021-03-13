@@ -7,10 +7,48 @@ import { notification, Alert } from 'antd';
 import * as actions from '../../store/actions';
 import classes from './profile-page.module.scss';
 
-const ProfilePage = ({ user, updateError, updateData, closeError }) => {
+const ProfilePage = ({ user, errorsList, updateError, updateData, closeError }) => {
   const { register, handleSubmit, errors } = useForm();
   if (!user) {
     return <Redirect to="/" />;
+  }
+  let alert = null
+  if (errorsList !== null) {
+      // eslint-disable-next-line no-shadow
+      const { errors } = errorsList
+      if (errors.email !== undefined && errors.username !== undefined) {
+          alert = <Alert
+              banner
+              message="Error"
+              description="These username and email have been already taken"
+              type="error"
+              showIcon
+              closable
+              onClose={closeError}
+          />
+      } else
+      if (errors.email !== undefined) {
+          alert = <Alert
+              banner
+              message="Error"
+              description="This email has been already taken"
+              type="error"
+              showIcon
+              closable
+              onClose={closeError}
+          />
+      } else
+      if (errors.username !== undefined) {
+          alert = <Alert
+              banner
+              message="Error"
+              description="This username has been already taken"
+              type="error"
+              showIcon
+              closable
+              onClose={closeError}
+          />
+      }
   }
   const { username, email, image } = user;
   const onSubmit = async (data) => {
@@ -110,15 +148,7 @@ const ProfilePage = ({ user, updateError, updateData, closeError }) => {
   if (updateError) {
     return (
         <article className={classes.profile__container}>
-            <Alert
-                banner
-                message="Error"
-                description="Sorry, this username is already taken"
-                type="error"
-                showIcon
-                closable
-                onClose={closeError}
-            />
+            {alert}
           {profilePage}
         </article>
     )
@@ -134,10 +164,12 @@ ProfilePage.propTypes = {
   user: PropTypes.objectOf(PropTypes.any),
   updateData: PropTypes.func.isRequired,
   updateError: PropTypes.bool.isRequired,
+    errorsList: PropTypes.objectOf(PropTypes.any),
     closeError: PropTypes.func.isRequired
 };
 ProfilePage.defaultProps = {
-  user: null
+  user: null,
+    errorsList: null,
 }
 
 const mapStateToProps = (state) => state.user;
