@@ -1,4 +1,4 @@
-import { LOGIN_USER, LOGOUT_USER, LOGIN_ERROR, REG_ERROR, CLOSE_ERROR, UPDATE_ERROR } from './constants'
+import { LOGIN_USER, LOGOUT_USER, LOGIN_ERROR, REG_ERROR, CLOSE_ERROR, UPDATE_ERROR } from './constants';
 
 const initialState = {
   user: null,
@@ -6,7 +6,7 @@ const initialState = {
   isLoggedIn: false,
   loginError: false,
   updateError: false,
-  regError: false
+  regError: false,
 };
 
 export default function userReducer(state = initialState, { type, payload }) {
@@ -16,7 +16,7 @@ export default function userReducer(state = initialState, { type, payload }) {
         user: payload,
         isLoggedIn: true,
         loginError: false,
-        errorsList: null
+        errorsList: null,
       };
     case LOGOUT_USER:
       return {
@@ -33,21 +33,21 @@ export default function userReducer(state = initialState, { type, payload }) {
       return {
         ...state,
         updateError: true,
-        errorsList: payload
-      }
+        errorsList: payload,
+      };
     case CLOSE_ERROR:
       return {
         ...state,
         loginError: false,
         updateError: false,
-        regError: false
+        regError: false,
       };
     case REG_ERROR:
       return {
         ...state,
         regError: true,
-        errorsList: payload
-      }
+        errorsList: payload,
+      };
     default:
       return state;
   }

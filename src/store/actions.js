@@ -47,16 +47,16 @@ const loginUser = (user) => ({
   payload: user,
 });
 const regError = (data) => ({
-  type: "REG_ERROR",
-  payload: data
-})
+  type: 'REG_ERROR',
+  payload: data,
+});
 const loginError = () => ({
   type: 'LOGIN_ERROR',
 });
 const updateError = (data) => ({
-  type: "UPDATE_ERROR",
-  payload: data
-})
+  type: 'UPDATE_ERROR',
+  payload: data,
+});
 export const closeError = () => ({
   type: 'CLOSE_ERROR',
 });
@@ -80,18 +80,17 @@ export const getArticle = (slug) => async (dispatch) => {
 };
 
 export const registerUser = (userData) => async (dispatch) => {
-  dispatch(closeError())
+  dispatch(closeError());
   const data = await realworldAPI.register(userData);
   if (data !== null && data.errors !== undefined) {
-    dispatch(regError(data))
-    return false
+    dispatch(regError(data));
+    return false;
   }
   const { username, email, image, token } = data;
   localStorage.setItem('data', token);
   const user = { username, email, image };
   dispatch(loginUser(user));
-  return true
-
+  return true;
 };
 export const loginTo = (userData) => async (dispatch) => {
   const data = await realworldAPI.login(userData);
@@ -106,23 +105,26 @@ export const loginTo = (userData) => async (dispatch) => {
 };
 export const getUser = () => async (dispatch) => {
   const data = await realworldAPI.getUserData();
+  if (data === null) {
+    return false;
+  }
   const { username, email, image } = data;
   const user = { username, email, image };
   dispatch(loginUser(user));
+  return true;
 };
 
 export const updateData = (userData) => async (dispatch) => {
-  dispatch(closeError())
+  dispatch(closeError());
   const data = await realworldAPI.updateUser(userData);
   if (data !== null && data.errors !== undefined) {
-    dispatch(updateError(data))
-    return false
+    dispatch(updateError(data));
+    return false;
   }
-    const { username, email, image } = data;
-    const user = { username, email, image };
-    dispatch(loginUser(user));
-    return true
-
+  const { username, email, image } = data;
+  const user = { username, email, image };
+  dispatch(loginUser(user));
+  return true;
 };
 export const postData = (articleData) => async (dispatch) => {
   const data = await realworldAPI.postArticle(articleData);

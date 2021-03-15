@@ -50,8 +50,8 @@ export default class RealworldService {
       body: JSON.stringify({ user }),
     });
     if (returnedRes.status === 422) {
-      const errorMessage = await returnedRes.json()
-      return errorMessage
+      const errorMessage = await returnedRes.json();
+      return errorMessage;
     }
     const returnedData = await returnedRes.json();
     return returnedData.user;
@@ -80,6 +80,9 @@ export default class RealworldService {
         Authorization: `Token ${token}`,
       },
     });
+    if (!returnedRes.ok) {
+      return null;
+    }
     const returnedData = await returnedRes.json();
     return returnedData.user;
   }
@@ -96,8 +99,8 @@ export default class RealworldService {
       body: JSON.stringify({ user }),
     });
     if (returnedRes.status === 422) {
-      const errorMessage = await returnedRes.json()
-      return errorMessage
+      const errorMessage = await returnedRes.json();
+      return errorMessage;
     }
     const returnedData = await returnedRes.json();
     return returnedData.user;
