@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import ExclamationCircleOutlined from '@ant-design/icons/lib/icons/ExclamationCircleOutlined';
 import classes from './full-article.module.scss';
-import * as actions from '../../../store/actions';
+import * as actions from '../../../store/actions/actions';
 import liked from './liked.svg';
 import unliked from './unliked.svg';
 import defaultAvatar from './default-avatar.svg';
@@ -22,12 +22,25 @@ const setAvatarImage = (image) => {
   }
   return defaultAvatar;
 };
+const setLikeImage = (user, favorited, slug, firstHandle, secondHandle) => {
+  if (!favorited) {
+    return (
+        <button className={classes.article__button} onClick={() => firstHandle(slug)} type="button" disabled={!user}>
+          <img className={classes.like} src={unliked} alt="Like this post" />
+        </button>
+    );
+  }
+     return (
+        <button className={classes.article__button} onClick={() => secondHandle(slug)} type="button" disabled={!user}>
+          <img className={classes.like} src={liked} alt="Unlike this post" />
+        </button>
+    );
+}
 
 const FullArticle = ({ slug, user, isDeleted, selectedArticle, getArticle, deleteArticle, like, unlike }) => {
   useEffect(() => {
     getArticle(slug);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ getArticle, slug ]);
   function showDeleteConfirm() {
     confirm({
       title: 'Are you sure to delete this article?',
@@ -63,20 +76,7 @@ const FullArticle = ({ slug, user, isDeleted, selectedArticle, getArticle, delet
       </div>
     ));
 
-    let likeImage = null;
-    if (!favorited) {
-      likeImage = (
-        <button className={classes.article__button} onClick={() => like(slug)} type="button" disabled={!user}>
-          <img className={classes.like} src={unliked} alt="Like this post" />
-        </button>
-      );
-    } else {
-      likeImage = (
-        <button className={classes.article__button} onClick={() => unlike(slug)} type="button" disabled={!user}>
-          <img className={classes.like} src={liked} alt="Unlike this post" />
-        </button>
-      );
-    }
+    const likeImage = setLikeImage(user, favorited, slug, like, unlike)
 
     const avatarImage = setAvatarImage(image);
 

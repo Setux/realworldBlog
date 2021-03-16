@@ -5,10 +5,9 @@ import { notification } from 'antd';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
-import * as actions from '../../store/actions';
+import * as actions from '../../store/actions/actions';
 import classes from './create-article.module.scss';
 
-// eslint-disable-next-line no-unused-vars
 const CreateArticle = ({ selectedArticle, isPosted, postData }) => {
   const [tags, setTags] = useState([{ isOwner: true, id: nanoid(3) }]);
   const { register, handleSubmit, errors } = useForm();
@@ -63,7 +62,6 @@ const CreateArticle = ({ selectedArticle, isPosted, postData }) => {
   });
   const onSubmit = (data) => {
     postData(data);
-    console.log(data);
     notification.success({
       message: 'Your article has been posted!',
       placement: 'bottomRight',

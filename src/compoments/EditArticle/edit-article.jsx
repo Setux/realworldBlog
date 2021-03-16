@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { notification } from 'antd';
 import { nanoid } from 'nanoid';
 import { Redirect } from 'react-router-dom';
-import * as actions from '../../store/actions';
+import * as actions from '../../store/actions/actions';
 import classes from './edit-article.module.scss';
 
 const EditArticle = ({ slug, selectedArticle, isPosted, editArticle }) => {

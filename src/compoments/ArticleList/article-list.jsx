@@ -5,9 +5,9 @@ import { MessageFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import Article from './Article';
 import classes from './article-list.module.scss';
-import * as actions from '../../store/actions';
+import * as actions from '../../store/actions/actions';
 
-const ArticleList = ({ data, totalArticles, currentPage, isLoading, getArticles }) => {
+const ArticleList = ({ user, data, totalArticles, currentPage, isLoading, getArticles }) => {
   useEffect(() => {
     getArticles(1);
   }, [getArticles]);
@@ -15,7 +15,7 @@ const ArticleList = ({ data, totalArticles, currentPage, isLoading, getArticles 
     const { id, ...articleProps } = element;
     return (
       <li key={id} className={classes.article__item}>
-        <Article {...articleProps} />
+        <Article page={currentPage} user={user} {...articleProps} />
       </li>
     );
   });
@@ -33,7 +33,7 @@ const ArticleList = ({ data, totalArticles, currentPage, isLoading, getArticles 
       <Pagination
         onChange={(page) => getArticles(page)}
         className={classes.paginator}
-        pageSize={5}
+        pageSize={10}
         defaultCurrent={currentPage}
         total={totalArticles}
         showSizeChanger={false}
@@ -48,11 +48,13 @@ ArticleList.propTypes = {
   currentPage: PropTypes.number,
   isLoading: PropTypes.bool.isRequired,
   getArticles: PropTypes.func.isRequired,
+  user: PropTypes.string
 };
 
 ArticleList.defaultProps = {
   totalArticles: 500,
   currentPage: 1,
+  user: null
 };
 
 const mapStateToProps = (state) => state.articles;

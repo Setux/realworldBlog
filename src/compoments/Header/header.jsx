@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classes from './header.module.scss';
-import { logoutUser } from '../../store/actions';
+import { logoutUser } from '../../store/actions/actions';
 import defaultAvatar from './default-avatar.svg';
 
 const setAvatarImage = (image) => {

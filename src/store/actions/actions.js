@@ -1,10 +1,10 @@
 import { nanoid } from 'nanoid';
-import RealworldService from '../services/socialAPI';
-
-const realworldAPI = new RealworldService();
+import { CONFIRM_RULES, POSTED, ON_LOAD, SET_ARTICLE, SET_PAGE, SET_DATA,
+  CLOSE_ERROR, DELETED, LOGIN_USER, LOGOUT_USER, USER_ERROR } from "../../assets/constants/constants";
+import RealworldService from "../../services/socialAPI"
 
 const getData = async (page) => {
-  const response = await realworldAPI.getArticles(page);
+  const response = await RealworldService.getArticles(page);
   const { articles, articlesCount } = response;
   const articlesWithID = articles.map((el) => ({
     ...el,
@@ -16,53 +16,49 @@ const getData = async (page) => {
   };
 };
 const getPage = async (slug) => {
-  const data = await realworldAPI.getArticle(slug);
+  const data = await RealworldService.getArticle(slug);
   return data;
 };
 const setArticles = (data) => ({
-  type: 'SET_DATA',
+  type: SET_DATA,
   payload: data,
 });
 const setPage = (page) => ({
-  type: 'SET_PAGE',
+  type: SET_PAGE,
   payload: page,
 });
 const setArticle = (data) => ({
-  type: 'SET_ARTICLE',
+  type: SET_ARTICLE,
   payload: data,
 });
 const posted = () => ({
-  type: 'POSTED',
+  type: POSTED,
 });
 const onDelete = () => ({
-  type: 'DELETED',
+  type: DELETED,
 });
-
+export const confirmRules = () => ({
+  type: CONFIRM_RULES
+})
 const onLoad = () => ({
-  type: 'ON_LOAD',
+  type: ON_LOAD,
 });
 
 const loginUser = (user) => ({
-  type: 'LOGIN_USER',
+  type: LOGIN_USER,
   payload: user,
 });
-const regError = (data) => ({
-  type: 'REG_ERROR',
+const userError = (data) => ({
+  type: USER_ERROR,
   payload: data,
 });
-const loginError = () => ({
-  type: 'LOGIN_ERROR',
-});
-const updateError = (data) => ({
-  type: 'UPDATE_ERROR',
-  payload: data,
-});
+
 export const closeError = () => ({
-  type: 'CLOSE_ERROR',
+  type: CLOSE_ERROR,
 });
 
 export const logoutUser = () => ({
-  type: 'LOGOUT_USER',
+  type: LOGOUT_USER,
 });
 
 export const getArticles = (page) => async (dispatch) => {
@@ -81,9 +77,9 @@ export const getArticle = (slug) => async (dispatch) => {
 
 export const registerUser = (userData) => async (dispatch) => {
   dispatch(closeError());
-  const data = await realworldAPI.register(userData);
-  if (data !== null && data.errors !== undefined) {
-    dispatch(regError(data));
+  const data = await RealworldService.register(userData);
+  if (data.errors) {
+    dispatch(userError(data));
     return false;
   }
   const { username, email, image, token } = data;
@@ -93,9 +89,10 @@ export const registerUser = (userData) => async (dispatch) => {
   return true;
 };
 export const loginTo = (userData) => async (dispatch) => {
-  const data = await realworldAPI.login(userData);
-  if (data === undefined) {
-    dispatch(loginError());
+  dispatch(closeError())
+  const data = await RealworldService.login(userData);
+  if (!data) {
+    dispatch(userError());
   } else {
     const { username, email, image, token } = data;
     localStorage.setItem('data', token);
@@ -104,8 +101,8 @@ export const loginTo = (userData) => async (dispatch) => {
   }
 };
 export const getUser = () => async (dispatch) => {
-  const data = await realworldAPI.getUserData();
-  if (data === null) {
+  const data = await RealworldService.getUserData();
+  if (!data) {
     return false;
   }
   const { username, email, image } = data;
@@ -116,9 +113,9 @@ export const getUser = () => async (dispatch) => {
 
 export const updateData = (userData) => async (dispatch) => {
   dispatch(closeError());
-  const data = await realworldAPI.updateUser(userData);
-  if (data !== null && data.errors !== undefined) {
-    dispatch(updateError(data));
+  const data = await RealworldService.updateUser(userData);
+  if (data.errors) {
+    dispatch(userError(data));
     return false;
   }
   const { username, email, image } = data;
@@ -127,25 +124,37 @@ export const updateData = (userData) => async (dispatch) => {
   return true;
 };
 export const postData = (articleData) => async (dispatch) => {
-  const data = await realworldAPI.postArticle(articleData);
+  const data = await RealworldService.postArticle(articleData);
   dispatch(setArticle(data));
   dispatch(posted());
 };
 export const editArticle = (article, slug) => async (dispatch) => {
-  const data = await realworldAPI.editArticle(article, slug);
+  const data = await RealworldService.editArticle(article, slug);
   dispatch(setArticle(data));
   dispatch(posted());
 };
 export const deleteArticle = (slug) => async (dispatch) => {
-  await realworldAPI.deleteArticle(slug);
+  await RealworldService.deleteArticle(slug);
   dispatch(onDelete());
 };
 
 export const like = (slug) => async (dispatch) => {
-  const data = await realworldAPI.likePost(slug);
+  const data = await RealworldService.likePost(slug);
   dispatch(setArticle(data));
 };
 export const unlike = (slug) => async (dispatch) => {
-  const data = await realworldAPI.unlikePost(slug);
+  const data = await RealworldService.unlikePost(slug);
   dispatch(setArticle(data));
+};
+export const likeMain = (slug, page) => async (dispatch) => {
+  await RealworldService.likePost(slug);
+  const data = await getData(page);
+  dispatch(setPage(page));
+  dispatch(setArticles(data));
+};
+export const unlikeMain = (slug, page) => async (dispatch) => {
+  await RealworldService.unlikePost(slug);
+  const data = await getData(page);
+  dispatch(setPage(page));
+  dispatch(setArticles(data));
 };

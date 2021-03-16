@@ -1,13 +1,13 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, Redirect } from 'react-router-dom';
 import { Alert } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as actions from '../../store/actions';
+import * as actions from '../../store/actions/actions';
 import classes from './login-form.module.scss';
 
-const LoginForm = ({ isLoggedIn, loginError, loginTo, closeError }) => {
+const LoginForm = ({ isLoggedIn, isError, loginTo, closeError }) => {
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => loginTo(data);
   const loginForm = (
@@ -26,8 +26,10 @@ const LoginForm = ({ isLoggedIn, loginError, loginTo, closeError }) => {
               pattern: /^[^@]+@[^@.]+\.[^@]+$/,
             })}
           />
-          {errors.email?.type === 'pattern' && <span className={classes.login__error}>Type correct email!</span>}
-          {errors.email?.type === 'required' && <span className={classes.login__error}>This field is required.</span>}
+          {errors.email?.type === 'pattern' &&
+          <span className={classes.login__error}>Type correct email!</span>}
+          {errors.email?.type === 'required' &&
+          <span className={classes.login__error}>This field is required.</span>}
         </label>
 
         <label className={classes.login__label}>
@@ -55,7 +57,7 @@ const LoginForm = ({ isLoggedIn, loginError, loginTo, closeError }) => {
       </p>
     </>
   );
-  if (loginError) {
+  if (isError) {
     return (
       <article className={classes.login__container}>
         <Alert
@@ -80,7 +82,7 @@ const LoginForm = ({ isLoggedIn, loginError, loginTo, closeError }) => {
 
 LoginForm.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
-  loginError: PropTypes.bool.isRequired,
+  isError: PropTypes.bool.isRequired,
   loginTo: PropTypes.func.isRequired,
   closeError: PropTypes.func.isRequired,
 };

@@ -1,4 +1,4 @@
-import { ON_LOAD, SET_ARTICLE, SET_DATA, SET_PAGE, POSTED, DELETED } from './constants';
+import { ON_LOAD, SET_ARTICLE, SET_DATA, SET_PAGE, POSTED, DELETED } from '../../assets/constants/constants';
 
 const initialState = {
   data: [],

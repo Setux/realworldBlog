@@ -1,52 +1,44 @@
-import { LOGIN_USER, LOGOUT_USER, LOGIN_ERROR, REG_ERROR, CLOSE_ERROR, UPDATE_ERROR } from './constants';
+import { LOGIN_USER, LOGOUT_USER, USER_ERROR, CLOSE_ERROR, CONFIRM_RULES } from '../../assets/constants/constants';
 
 const initialState = {
   user: null,
   errorsList: null,
   isLoggedIn: false,
-  loginError: false,
-  updateError: false,
-  regError: false,
+  isError: false,
+  confirmedRules: false
 };
 
 export default function userReducer(state = initialState, { type, payload }) {
   switch (type) {
     case LOGIN_USER:
       return {
+        ...state,
         user: payload,
         isLoggedIn: true,
-        loginError: false,
         errorsList: null,
       };
+    case CONFIRM_RULES:
+      return {
+        ...state,
+        confirmedRules: !state.confirmedRules
+      }
     case LOGOUT_USER:
       return {
         user: null,
         isLoggedIn: false,
         loginError: false,
       };
-    case LOGIN_ERROR:
+    case USER_ERROR:
       return {
         ...state,
-        loginError: true,
-      };
-    case UPDATE_ERROR:
-      return {
-        ...state,
-        updateError: true,
+        isError: true,
         errorsList: payload,
       };
     case CLOSE_ERROR:
       return {
         ...state,
-        loginError: false,
-        updateError: false,
-        regError: false,
-      };
-    case REG_ERROR:
-      return {
-        ...state,
-        regError: true,
-        errorsList: payload,
+        errorsList: null,
+        isError: false
       };
     default:
       return state;

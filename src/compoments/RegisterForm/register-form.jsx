@@ -1,13 +1,13 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, Redirect } from 'react-router-dom';
-import { Alert } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as actions from '../../store/actions';
+import * as actions from '../../store/actions/actions';
+import UserAlert from "../Alert";
 import classes from './register-form.module.scss';
 
-const RegisterForm = ({ errorsList, isLoggedIn, registerUser, closeError }) => {
+const RegisterForm = ({ errorsList, isLoggedIn, registerUser, closeError, confirmRules, confirmedRules }) => {
   const { register, handleSubmit, errors, getValues } = useForm();
   const onSubmit = (data) => registerUser(data);
   const regForm = (
@@ -49,7 +49,8 @@ const RegisterForm = ({ errorsList, isLoggedIn, registerUser, closeError }) => {
               pattern: /^[^@]+@[^@.]+\.[^@]+$/,
             })}
           />
-          {errors.email?.type === 'pattern' && <span className={classes.register__error}>Type correct email!</span>}
+          {errors.email?.type === 'pattern' &&
+          <span className={classes.register__error}>Type correct email!</span>}
           {errors.email?.type === 'required' && (
             <span className={classes.register__error}>This field is required.</span>
           )}
@@ -96,7 +97,7 @@ const RegisterForm = ({ errorsList, isLoggedIn, registerUser, closeError }) => {
           )}
         </label>
         <hr className={classes.register__line} />
-        <label className={classes['register__label--check']}>
+        <label onChange={confirmRules} className={classes['register__label--check']}>
           <input
             className={classes['register__check--input']}
             type="checkbox"
@@ -109,7 +110,7 @@ const RegisterForm = ({ errorsList, isLoggedIn, registerUser, closeError }) => {
         {errors.confirmRules?.type === 'required' && (
           <span className={classes.register__error}>You must accept this term.</span>
         )}
-        <input className={classes.register__submit} type="submit" value="Submit" />
+        <input className={classes.register__submit} disabled={!confirmedRules} type="submit" value="Submit" />
       </form>
       <p className={classes.register__redirect}>
         Already have an account? <Link to="/sign-in">Sign In</Link>
@@ -119,51 +120,7 @@ const RegisterForm = ({ errorsList, isLoggedIn, registerUser, closeError }) => {
   if (errorsList !== null) {
     // eslint-disable-next-line no-shadow
     const { errors } = errorsList;
-
-    // eslint-disable-next-line no-shadow
-    const setAlert = (errorsList, closeErrorHandle) => {
-      if (errors.email !== undefined && errors.username !== undefined) {
-        return (
-          <Alert
-            banner
-            message="Error"
-            description="These username and email have been already taken"
-            type="error"
-            showIcon
-            closable
-            onClose={closeErrorHandle}
-          />
-        );
-      }
-      if (errors.email !== undefined) {
-        return (
-          <Alert
-            banner
-            message="Error"
-            description="This email has been already taken"
-            type="error"
-            showIcon
-            closable
-            onClose={closeErrorHandle}
-          />
-        );
-      }
-      if (errors.username !== undefined) {
-        return (
-          <Alert
-            banner
-            message="Error"
-            description="This username has been already taken"
-            type="error"
-            showIcon
-            closable
-            onClose={closeErrorHandle}
-          />
-        );
-      }
-      return null;
-    };
-    const alert = setAlert(errors, closeError);
+    const alert = UserAlert(errors, closeError);
     return (
       <article className={classes.register__container}>
         {alert}
@@ -182,6 +139,8 @@ RegisterForm.propTypes = {
   registerUser: PropTypes.func.isRequired,
   errorsList: PropTypes.objectOf(PropTypes.any),
   closeError: PropTypes.func.isRequired,
+    confirmedRules: PropTypes.bool.isRequired,
+    confirmRules: PropTypes.func.isRequired
 };
 RegisterForm.defaultProps = {
   errorsList: null,

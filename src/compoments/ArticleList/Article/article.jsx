@@ -3,7 +3,9 @@ import { format } from 'date-fns';
 import { nanoid } from 'nanoid';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import {connect} from "react-redux";
 import classes from './article.module.scss';
+import * as actions from "../../../store/actions/actions"
 import liked from './liked.svg';
 import unliked from './unliked.svg';
 import defaultAvatar from './default-avatar.svg';
@@ -14,21 +16,30 @@ const setAvatarImage = (image) => {
   }
   return defaultAvatar;
 };
+const setLikeImage = (user, favorited, slug, page, firstHandle, secondHandle) => {
+  if (!favorited) {
+    return (
+        <button className={classes.article__button} onClick={() => firstHandle(slug, page)} type="button" disabled={!user}>
+          <img className={classes.like} src={unliked} alt="Like this post" />
+        </button>
+    );
+  }
+  return (
+      <button className={classes.article__button} onClick={() => secondHandle(slug, page)} type="button" disabled={!user}>
+        <img className={classes.like} src={liked} alt="Unlike this post" />
+      </button>
+  );
+}
 
 const Article = (props) => {
-  const { title, slug, tagList, createdAt, description, author, favoritesCount, favorited } = props;
+  const { user, title, slug, page, tagList, createdAt, description, author, favoritesCount, favorited, likeMain, unlikeMain } = props;
   const createdTime = format(new Date(createdAt), 'MMMM d, yyyy');
   const tags = tagList.map((el) => (
     <div key={nanoid(4)} className={classes.tags__item}>
       {el}
     </div>
   ));
-  let likeImage = null;
-  if (!favorited) {
-    likeImage = <img className={classes.like} src={unliked} alt="Like this post" />;
-  } else {
-    likeImage = <img className={classes.like} src={liked} alt="Unlike this post" />;
-  }
+  const likeImage = setLikeImage(user, favorited, slug, page, likeMain, unlikeMain)
   const { username, image } = author;
   const avatarImage = setAvatarImage(image);
   return (
@@ -60,6 +71,8 @@ const Article = (props) => {
 };
 
 Article.propTypes = {
+  user: PropTypes.string,
+  page: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   slug: PropTypes.string.isRequired,
   tagList: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -68,6 +81,11 @@ Article.propTypes = {
   author: PropTypes.objectOf(PropTypes.any).isRequired,
   favoritesCount: PropTypes.number.isRequired,
   favorited: PropTypes.bool.isRequired,
+  likeMain: PropTypes.func.isRequired,
+  unlikeMain: PropTypes.func.isRequired
 };
+Article.defaultProps = {
+  user: null
+}
 
-export default Article;
+export default connect(null, actions)(Article);

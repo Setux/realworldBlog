@@ -3,65 +3,37 @@ import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { notification, Alert } from 'antd';
-import * as actions from '../../store/actions';
+import { notification } from 'antd';
+import UserAlert from "../Alert";
+import * as actions from '../../store/actions/actions';
 import classes from './profile-page.module.scss';
 
-const ProfilePage = ({ user, errorsList, updateError, updateData, closeError }) => {
+const ProfilePage = ({ user, errorsList, updateData, closeError }) => {
   const { register, handleSubmit, errors } = useForm();
   if (!user) {
     return <Redirect to="/" />;
   }
-  let alert = null;
-  if (errorsList !== null) {
-    // eslint-disable-next-line no-shadow
-    const { errors } = errorsList;
-    if (errors.email !== undefined && errors.username !== undefined) {
-      alert = (
-        <Alert
-          banner
-          message="Error"
-          description="These username and email have been already taken"
-          type="error"
-          showIcon
-          closable
-          onClose={closeError}
-        />
-      );
-    } else if (errors.email !== undefined) {
-      alert = (
-        <Alert
-          banner
-          message="Error"
-          description="This email has been already taken"
-          type="error"
-          showIcon
-          closable
-          onClose={closeError}
-        />
-      );
-    } else if (errors.username !== undefined) {
-      alert = (
-        <Alert
-          banner
-          message="Error"
-          description="This username has been already taken"
-          type="error"
-          showIcon
-          closable
-          onClose={closeError}
-        />
-      );
-    }
-  }
   const { username, email, image } = user;
   const onSubmit = async (data) => {
-    const isSuccess = await updateData(data);
-    if (isSuccess) {
-      notification.success({
-        message: 'Updated user profile',
-        placement: 'bottomRight',
-      });
+    if (data.password === "") {
+      // eslint-disable-next-line no-shadow
+      const { username, email, image } = data
+      const newData = { username, email, image}
+      const isSuccess = await updateData(newData);
+      if (isSuccess) {
+        notification.success({
+          message: 'Updated user profile',
+          placement: 'bottomRight',
+        });
+      }
+    } else {
+      const isSuccess = await updateData(data);
+      if (isSuccess) {
+        notification.success({
+          message: 'Updated user profile',
+          placement: 'bottomRight',
+        });
+      }
     }
   };
   const profilePage = (
@@ -117,11 +89,8 @@ const ProfilePage = ({ user, errorsList, updateError, updateData, closeError }) 
             name="password"
             type="password"
             placeholder="Password"
-            ref={register({ required: true, minLength: 8, maxLength: 40 })}
+            ref={register({ minLength: 8, maxLength: 40 })}
           />
-          {errors.password?.type === 'required' && (
-            <span className={classes.profile__error}>This field is required.</span>
-          )}
           {errors.password?.type === 'minLength' && (
             <span className={classes.profile__error}>Your new password needs to be at least 8 characters.</span>
           )}
@@ -149,21 +118,25 @@ const ProfilePage = ({ user, errorsList, updateError, updateData, closeError }) 
       </form>
     </>
   );
-  if (updateError) {
+  let alert = null;
+  if (errorsList !== null) {
+    // eslint-disable-next-line no-shadow
+    const { errors } = errorsList;
+    alert = UserAlert(errors, closeError)
     return (
-      <article className={classes.profile__container}>
-        {alert}
-        {profilePage}
-      </article>
+        <article className={classes.profile__container}>
+          {alert}
+          {profilePage}
+        </article>
     );
   }
+
   return <article className={classes.profile__container}>{profilePage}</article>;
 };
 
 ProfilePage.propTypes = {
   user: PropTypes.objectOf(PropTypes.any),
   updateData: PropTypes.func.isRequired,
-  updateError: PropTypes.bool.isRequired,
   errorsList: PropTypes.objectOf(PropTypes.any),
   closeError: PropTypes.func.isRequired,
 };
